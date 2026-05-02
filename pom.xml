@@ -19,7 +19,6 @@
     <name>betterhome-backend</name>
 
     <properties>
-        <!-- CHANGE: Java 17 for Render compatibility -->
         <java.version>17</java.version>
     </properties>
 
@@ -43,10 +42,17 @@
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
 
-        <!-- H2 (optional for testing) -->
+        <!-- H2 (for Render fallback) -->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- MySQL -->
+        <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
             <scope>runtime</scope>
         </dependency>
 
@@ -62,12 +68,6 @@
             <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
 
-        <!-- MySQL -->
-        <dependency>
-            <groupId>com.mysql</groupId>
-            <artifactId>mysql-connector-j</artifactId>
-        </dependency>
-
         <!-- Test -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -78,14 +78,21 @@
     </dependencies>
 
     <build>
-        <finalName>app</finalName> <!-- IMPORTANT for Docker -->
+        <finalName>app</finalName>
 
         <plugins>
 
-            <!-- Spring Boot Plugin -->
+            <!-- Spring Boot Plugin (IMPORTANT: repackage) -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
 
             <!-- Compiler Plugin -->
